@@ -69,5 +69,15 @@ export default StyleSheet.create({
         width: 40,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    emptyView: {
+        flex: 1,
+        alignItems: 'center',
+        marginTop: '40%'
+    },
+    emptyMsg: {
+        fontSize: 16,
+        color: '#000',
+        fontWeight: 'bold'
     }
 });

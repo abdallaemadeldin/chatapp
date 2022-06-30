@@ -4,11 +4,13 @@ import { useRoute } from '@react-navigation/native';
 
 export const useChat = () => {
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(true);
     const [messagesList, setMessagesList] = useState([]);
     const { params: { UUID, name } } = useRoute();
 
     useEffect(() => {
         DB().ref('/chat').on('value', snapshot => {
+            setLoading(false);
             if (snapshot.val()) {
                 const arr = Object.keys(snapshot.val())
                     .map(function (key, i, arr) {
@@ -23,6 +25,8 @@ export const useChat = () => {
                     if (keyA > keyB) return -1;
                     return 0
                 }));
+            } else {
+                setMessagesList([]);
             }
         })
     }, []);
@@ -44,6 +48,7 @@ export const useChat = () => {
     return {
         messagesList,
         message,
+        loading,
         sendMessage,
         setMessage
     }

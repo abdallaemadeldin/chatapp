@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, TextInput, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, TextInput, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styles from './styles';
@@ -7,7 +7,7 @@ import { useChat } from '../../hooks/chat.hook';
 
 export const Chat = () => {
     const { top, bottom } = useSafeAreaInsets(); // This return the notch height from bottom side.
-    const { message, messagesList, setMessage, sendMessage } = useChat();
+    const { message, messagesList, loading, setMessage, sendMessage } = useChat();
 
     const renderItem = ({ item }) => {
         const splitted = item.name.split(' ');
@@ -24,16 +24,26 @@ export const Chat = () => {
         );
     }
 
+    const renderEmpty = () => {
+        return (
+            <View style={styles.emptyView}>
+                <Icon name='alert-decagram' size={80} />
+                <Text style={styles.emptyMsg}>No messages yet!!</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={[styles.container, { paddingBottom: bottom }]}>
-            <FlatList
+            {loading ? <ActivityIndicator color='#0009' style={{ flex: 1 }} /> : <FlatList
                 data={messagesList}
                 renderItem={renderItem}
                 maxToRenderPerBatch={10}
                 style={{ width: '100%' }}
-                inverted
+                inverted={messagesList.length > 0}
+                ListEmptyComponent={renderEmpty}
                 contentContainerStyle={{ paddingHorizontal: 5, paddingBottom: top + 20 }}
-            />
+            />}
             <View style={styles.inputHolder}>
                 <TextInput style={styles.input} placeholder='Type here...' placeholderTextColor="#0005"
                     multiline value={message} onChangeText={setMessage} />
